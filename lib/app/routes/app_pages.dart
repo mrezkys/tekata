@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import 'package:tekata/app/modules/game/bindings/game_binding.dart';
+import 'package:tekata/app/modules/game/views/game_view.dart';
 import 'package:tekata/app/modules/home/bindings/home_binding.dart';
 import 'package:tekata/app/modules/home/views/home_view.dart';
 
@@ -15,6 +17,11 @@ class AppPages {
       name: _Paths.HOME,
       page: () => HomeView(),
       binding: HomeBinding(),
+    ),
+    GetPage(
+      name: _Paths.GAME,
+      page: () => GameView(),
+      binding: GameBinding(),
     ),
   ];
 }
