@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:tekata/app/controllers/loading_controller.dart';
+import 'package:tekata/app/routes/app_pages.dart';
 import 'package:tekata/app/widgets/dialog/custom_alert_dialog.dart';
 import 'package:tekata/app/widgets/snackbar/custom_snackbar.dart';
 
@@ -25,11 +26,11 @@ class GameController extends GetxController {
   void changePrimaryButtonName({bool reset = false}) {
     print('executed');
     if (reset == true) {
-      primaryButtonName.value == 'menyerah';
+      primaryButtonName.value = 'menyerah';
       primaryButtonName.refresh();
       print('menyerah');
     } else {
-      primaryButtonName.value == 'lanjut';
+      primaryButtonName.value = 'lanjut';
       primaryButtonName.refresh();
       print('lanjut');
     }
@@ -187,6 +188,38 @@ class GameController extends GetxController {
     }
   }
 
+  Future<void> surrendGame() async {
+    loadingController.isLoading.value = true;
+
+    final box = GetStorage();
+    String key = await box.read('key');
+
+    answerChecked.addAll(
+      List.generate(level, (index) => true),
+    );
+    answerChecked.refresh();
+    await writeGameResult(level, 'lose');
+
+    Map<String, dynamic> gameResult = getGameResult(level);
+    String kbbi = await getKbbi(key);
+
+    loadingController.isLoading.value = false;
+
+    CustomAlertDialog.gameResult(
+      status: 'lose',
+      played: gameResult['played'],
+      win: gameResult['win'],
+      winstreak: gameResult['winstreak'],
+      answer: key,
+      answerDescription: kbbi,
+    ).then((value) {
+      print("closed");
+      nextGame();
+    });
+  }
+
+  nextGame() {}
+
   initApp() async {
     loadingController.isLoading.value = true;
     answerControllers = List.generate(level, (index) => TextEditingController());
@@ -212,7 +245,7 @@ class GameController extends GetxController {
   final count = 0.obs;
   @override
   void onInit() {
-    super.onInit();
     initApp();
+    super.onInit();
   }
 }
