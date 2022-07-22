@@ -4,7 +4,7 @@ import 'package:tekata/app/style/app_color.dart';
 import 'package:tekata/app/widgets/game_result_item.dart';
 
 class CustomAlertDialog {
-  static gameResult({
+  static Future gameResult({
     required String status,
     required int played,
     required int win,
